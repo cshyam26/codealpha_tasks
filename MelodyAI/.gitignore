@@ -1,0 +1,31 @@
+
+# Python cache and virtual environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Generated audio
+outputs/
+*.wav
+*.mp3
+*.flac
+
+# Model checkpoints and downloaded weights
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+models/
+checkpoints/
+
+# Editor and OS files
+.vscode/
+.DS_Store
+Thumbs.db

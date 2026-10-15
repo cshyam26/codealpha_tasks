@@ -1,0 +1,382 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MelodyAI | AI Music Generator</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            color: #f7f5ff;
+            background: linear-gradient(135deg, #100d24, #242052, #111827);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 720px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo { font-size: 42px; text-align: center; }
+        h1 { text-align: center; margin-bottom: 8px; }
+        .subtitle {
+            text-align: center;
+            color: #c4bddf;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        label { display: block; margin-bottom: 10px; font-weight: bold; }
+
+        textarea {
+            width: 100%;
+            min-height: 130px;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid #625b8d;
+            background: #17142d;
+            color: white;
+            font: inherit;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: 2px solid #a99aff;
+            border-color: transparent;
+        }
+
+        button, .download {
+            display: block;
+            width: 100%;
+            margin-top: 16px;
+            padding: 14px;
+            border: 0;
+            border-radius: 12px;
+            background: linear-gradient(90deg, #8066f5, #bd69e8);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        button:disabled { opacity: 0.65; cursor: wait; }
+
+        .result, .error {
+            margin-top: 24px;
+            padding: 20px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .error {
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            color: #ffbaba;
+            border: 1px solid #8b4545;
+        }
+
+        audio { width: 100%; margin-top: 14px; }
+        .hint { color: #c4bddf; font-size: 13px; line-height: 1.5; }
+        @media (max-width: 500px) {
+            .container { padding: 22px; }
+            
+.presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.presets .preset {
+    width: auto;
+    margin-top: 0;
+    padding: 10px 16px;
+    background: rgba(255, 255, 255, 0.09);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 999px;
+    font-size: 14px;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.presets .preset:hover {
+    background: rgba(160, 130, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.sad-variations {
+    margin-top: 20px;
+    padding: 16px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.sad-variations > p {
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 0;
+    margin-bottom: 14px;
+    color: #d8caff;
+}
+
+.mood-variations {
+    margin-top: 20px;
+    padding: 16px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.mood-variations > p {
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 0;
+    margin-bottom: 14px;
+    color: #d8caff;
+}
+
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <div class="logo">🎹</div>
+        <h1>MelodyAI</h1>
+        <p class="subtitle">
+            Turn your emotions and imagination into music with AI.
+        </p>
+
+        <form method="POST" id="musicForm">
+          
+            
+<label for="prompt">Describe the music you want</label>
+
+<div class="presets">
+    <button type="button" class="preset"
+        data-prompt="Sad emotional piano, soft violin, lonely rainy night atmosphere, slow tempo, no vocals.">
+        💔 Sad
+    </button>
+
+    <button type="button" class="preset"
+        data-prompt="Peaceful relaxing piano, gentle acoustic guitar, warm ambient sounds, calm nature atmosphere, no vocals.">
+        🌿 Relaxing
+    </button>
+
+    <button type="button" class="preset"
+        data-prompt="Epic cinematic orchestral music, emotional strings, dramatic brass, powerful percussion, hopeful climax, no vocals.">
+        🎬 Cinematic
+    </button>
+
+    <button type="button" class="preset"
+        data-prompt="Uplifting inspirational piano and orchestral strings, starting gently and building into a hopeful, emotional melody, no vocals.">
+        ✨ Hopeful
+    </button>
+</div>
+
+
+<div class="sad-variations">
+    <p>💔 Explore different Sad moods</p>
+
+    <div class="presets">
+        <button type="button" class="preset"
+            data-prompt="Heartbreaking solo piano, slow melancholic melody, emotional cello, feeling of loneliness and heartbreak, intimate atmosphere, no vocals.">
+            💔 Heartbreak
+        </button>
+
+        <button type="button" class="preset"
+            data-prompt="Melancholic piano music on a rainy night, soft distant thunder atmosphere, gentle violin, lonely cinematic mood, slow tempo, no vocals.">
+            🌧️ Rainy Night
+        </button>
+
+        <button type="button" class="preset"
+            data-prompt="Emotional piano and violin instrumental about missing someone deeply, tender melody, memories of time spent together, longing and bittersweet sadness, no vocals.">
+            🥀 Missing Someone
+        </button>
+
+        <button type="button" class="preset"
+            data-prompt="Nostalgic emotional instrumental about childhood memories that can never return, warm piano, soft acoustic guitar and gentle strings, bittersweet and reflective, no vocals.">
+            🕰️ Nostalgia
+        </button>
+
+        <button type="button" class="preset"
+            data-prompt="Dark melancholic cinematic instrumental, haunting piano, deep ambient textures, expressive cello, slow minor-key melody, solitude and introspection, no vocals.">
+            🌌 Dark Sadness
+        </button>
+
+        <button type="button" class="preset"
+            data-prompt="Emotional farewell instrumental, delicate piano, sorrowful violin melody, feeling of saying goodbye to someone important, slow cinematic build, no vocals.">
+            🥀 Farewell
+        </button>
+    </div>
+    
+<div class="mood-variations">
+    <p>🌿 Explore different Relaxing moods</p>
+    <div class="presets">
+        <button type="button" class="preset"
+            data-prompt="Peaceful solo piano, gentle slow melody, warm soft harmonies, calming atmosphere for relaxation and meditation, no vocals.">
+            🧘 Meditation
+        </button>
+        <button type="button" class="preset"
+            data-prompt="Dreamy ambient instrumental, soft synthesizer pads, floating textures, peaceful starlit sky atmosphere, slow and spacious, no vocals.">
+            🌌 Dreamy Ambient
+        </button>
+        <button type="button" class="preset"
+            data-prompt="Gentle acoustic guitar instrumental, soft fingerpicking, warm natural tones, cozy peaceful evening atmosphere, no vocals.">
+            🎸 Acoustic Calm
+        </button>
+        <button type="button" class="preset"
+            data-prompt="Peaceful nature-inspired instrumental, gentle piano, soft flowing water ambience, light birdsong atmosphere, serene forest morning, no vocals.">
+            🌳 Nature
+        </button>
+        <button type="button" class="preset"
+            data-prompt="Soft lo-fi instrumental, mellow electric piano, gentle dusty beats, warm bass, relaxed late-night study atmosphere, no vocals.">
+            ☕ Lo-fi Study
+        </button>
+        <button type="button" class="preset"
+            data-prompt="Gentle sleep music, very slow piano notes, soft ambient pads, minimal melody, soothing quiet nighttime atmosphere, no vocals or drums.">
+            🌙 Sleep
+        </button>
+    </div>
+</div>
+
+<div class="mood-variations">
+    <p>🎬 Explore different Cinematic moods</p>
+    <div class="presets">
+        <button type="button" class="preset"
+            data-prompt="Epic orchestral adventure soundtrack, bold brass, sweeping strings, powerful percussion, heroic theme, no vocals.">
+            ⚔️ Epic Adventure
+        </button>
+        <button type="button" class="preset"
+            data-prompt="Emotional film score, delicate piano, expressive strings, gradual orchestral build, deeply moving and bittersweet atmosphere, no vocals.">
+            🎻 Emotional Score
+        </button>
+        <button type="button" class="preset"
+            data-prompt="Dark suspenseful cinematic instrumental, low drones, tense strings, mysterious piano, subtle dramatic percussion, thriller atmosphere, no vocals.">
+            🕵️ Suspense
+        </button>
+        <button type="button" class="preset"
+            data-prompt="Magical fantasy film soundtrack, shimmering bells, enchanting strings, gentle woodwinds, mysterious and wondrous atmosphere, no vocals.">
+            🪄 Fantasy
+        </button>
+        <button type="button" class="preset"
+            data-prompt="Powerful futuristic sci-fi cinematic music, deep synthesizers, vast atmospheric textures, pulsing electronic rhythms, mysterious cosmic feeling, no vocals.">
+            🚀 Sci-fi
+        </button>
+        <button type="button" class="preset"
+            data-prompt="Inspirational cinematic trailer music, dramatic orchestral strings, bold brass, deep percussion, gradual tension and triumphant climax, no vocals.">
+            🏆 Trailer Music
+        </button>
+    </div>
+</div>
+
+<div class="mood-variations">
+    <p>✨ Explore different Hopeful moods</p>
+    <div class="presets">
+        <button type="button" class="preset"
+            data-prompt="Uplifting piano instrumental, bright warm chords, gentle strings, feeling of a fresh start and new beginnings, no vocals.">
+            🌅 New Beginnings
+        </button>
+        <button type="button" class="preset"
+            data-prompt="Inspirational orchestral instrumental, gradual build from soft piano to soaring strings and brass, courage and overcoming adversity, no vocals.">
+            💪 Inner Strength
+        </button>
+        <button type="button" class="preset"
+            data-prompt="Joyful uplifting instrumental, bright acoustic guitar, lively piano, light percussion, warm sunny day and carefree happiness, no vocals.">
+            ☀️ Happiness
+        </button>
+        <button type="button" class="preset"
+            data-prompt="Dreamy romantic instrumental, tender piano melody, delicate violin harmonies, warm gentle strings, beautiful feeling of love and togetherness, no vocals.">
+            ❤️ Love
+        </button>
+        <button type="button" class="preset"
+            data-prompt="Motivational cinematic instrumental, steady powerful percussion, energetic strings, determined piano melody, overcoming obstacles and achieving dreams, no vocals.">
+            🏅 Motivation
+        </button>
+        <button type="button" class="preset"
+            data-prompt="Peaceful hopeful instrumental, soft piano, gentle orchestral strings, birds at sunrise atmosphere, gratitude, inner peace and optimism, no vocals.">
+            🕊️ Inner Peace
+        </button>
+    </div>
+</div>
+
+</div>
+
+
+<textarea
+    id="prompt"
+    name="prompt"
+    maxlength="1000"
+    placeholder="Describe the mood, instruments, and atmosphere..."
+    required
+>{{ prompt }}</textarea>
+
+                id="prompt"
+                name="prompt"
+                maxlength="1000"
+                placeholder="Example: Emotional piano that slowly transforms into a hopeful cinematic melody, with gentle strings and no vocals."
+                required
+            >{{ prompt }}</textarea>
+
+            <p class="hint">
+                Describe the mood, instruments, tempo, and atmosphere.
+                Generation may take a few minutes.
+            </p>
+
+            <button type="submit" id="generateButton">
+                ♫ Generate Music
+            </button>
+        </form>
+
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+
+        {% if generated %}
+            <section class="result">
+                <h2>Your music is ready ✨</h2>
+                <p class="hint">Prompt: {{ prompt }}</p>
+
+                <audio controls preload="metadata">
+                    <source
+                        src="{{ url_for('audio', filename='musicgen_output.wav') }}?v={{ range(1, 1000000) | random }}"
+                        type="audio/wav"
+                    >
+                    Your browser does not support audio playback.
+                </audio>
+
+                <a
+                    class="download"
+                    href="{{ url_for('download', filename='musicgen_output.wav') }}"
+                >⬇ Download your music (WAV)</a>
+            </section>
+        {% endif %}
+    </main>
+
+    <script>
+        
+document.querySelectorAll(".preset").forEach(function (button) {
+    button.addEventListener("click", function () {
+        document.getElementById("prompt").value =
+            button.dataset.prompt;
+        document.getElementById("prompt").focus();
+    });
+});
+
+    </script>
+</body>
+</html>
